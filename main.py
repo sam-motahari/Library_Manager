@@ -332,6 +332,12 @@ def add_member(fname, lname, phone, email):
         return
     conn = sqlite3.connect('library.db')
     c = conn.cursor()
+    c.execute("SELECT members.email FROM members WHERE members.email = ?", (email,))
+    person_email = c.fetchone()
+    if person_email:
+        print_message(f"{email} is already existed in the database!")
+        conn.close()
+        return
     c.execute("INSERT INTO members (fname, lname, phone, email) VALUES (?, ?,? ,?)", (fname, lname, phone, email))
     conn.commit()
     conn.close()
